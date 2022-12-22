@@ -1,36 +1,37 @@
+import { useState, createRef, RefObject } from 'react'
+
 import Page from '@/components/page'
 import Section from '@/components/section'
 
-const Index = () => (
-	<Page>
-		<Section>
-			<h2 className='text-xl font-semibold text-zinc-800 dark:text-zinc-200'>
-				We grow a lot of rice.
-			</h2>
+const Index = () => {
+	const videoPlayerRef: RefObject<HTMLVideoElement> = createRef();
 
-			<div className='mt-2'>
-				<p className='text-zinc-600 dark:text-zinc-400'>
-					You love rice, and so does the rest of the world. In the crop year
-					2008/2009, the milled rice production volume amounted to over{' '}
-					<span className='font-medium text-zinc-900 dark:text-zinc-50'>
-						448 million tons
-					</span>{' '}
-					worldwide.
-				</p>
+	const onFileSelected = (e: any) => {
+		const file = e.target.files[0]
+		const type = file.type
 
-				<br />
+		const fileURL = URL.createObjectURL(file)
 
-				<p className='text-sm text-zinc-600 dark:text-zinc-400'>
-					<a
-						href='https://github.com/mvllow/next-pwa-template'
-						className='underline'
-					>
-						Source
-					</a>
-				</p>
-			</div>
-		</Section>
-	</Page>
-)
+		videoPlayerRef.current!.src = fileURL
+
+		console.log(fileURL);
+	}
+
+	return (
+		<Page>
+			<Section>
+				<h2 className='text-xl font-semibold text-zinc-800 dark:text-zinc-200'>
+					<input type="file" name="video file" id="video-file" onChange={onFileSelected} accept="video/*" />
+				</h2>
+
+				<div className='mt-2'>
+					<video className="w-full" controls autoPlay ref={videoPlayerRef}>
+						Your browser does not support the video tag.
+					</video>
+				</div>
+			</Section>
+		</Page>
+	)
+}
 
 export default Index
