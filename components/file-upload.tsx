@@ -1,10 +1,10 @@
-import { useState, createRef, RefObject, ChangeEventHandler } from 'react'
+import { ChangeEvent } from 'react'
 
 import Section from '@/components/section'
 
 const FileUpload = (props: FileUploadProps) => {
 
-	const onFileSelected = (e: Event) => {
+	const onFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
 		const element = e.currentTarget as HTMLInputElement
 		const fileList: FileList | null = element.files
 		const file = fileList![0]

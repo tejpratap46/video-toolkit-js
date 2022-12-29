@@ -2,7 +2,7 @@ import { useState, createRef, RefObject } from 'react'
 
 import Page from '@/components/page'
 import FileUpload from '@/components/file-upload'
-import VideoPlayer from '@/components/video-player'
+import VideoPlayer from '@/components/video/video-player'
 
 const Index = () => {
 
