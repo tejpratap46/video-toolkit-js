@@ -1,25 +1,37 @@
 import { useState, createRef, RefObject } from 'react'
 
 import Page from '@/components/page'
-import Section from '@/components/section'
+import FileUpload from '@/components/file-upload'
+import VideoPlayer from '@/components/video-player'
 
 const Index = () => {
-	const videoPlayerRef: RefObject<HTMLVideoElement> = createRef();
 
+	const [selectedFile, setSelectedFile] = useState<File>()
 
-	return (
-		<Page>
-			<Section>
-				<div className=" container m-auto grid grid-cols-2">
-					<div className='mt-2'>
-						<video className='w-full' style={{height: '60vh'}} controls autoPlay ref={videoPlayerRef}>
-							Your browser does not support the video tag.
-						</video>
-					</div>
-				</div>
-			</Section>
-		</Page>
-	)
+	const onFileSelected = (file: File) => {
+		const type = file.type
+		const size = file.size
+
+		const fileURL = URL.createObjectURL(file)
+
+		console.log(type, size, fileURL);
+
+		setSelectedFile(file)
+	}
+
+	if (selectedFile) {
+		return (
+			<Page>
+				<VideoPlayer file={selectedFile} />
+			</Page>
+		)
+	} else {
+		return (
+			<Page>
+				<FileUpload onFileSelected={onFileSelected} />
+			</Page>
+		)
+	}
 }
 
 export default Index
