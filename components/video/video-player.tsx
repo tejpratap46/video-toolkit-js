@@ -10,21 +10,21 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 	const videoPlayerRef = useRef<HTMLVideoElement>(null)
 	const [videoData, setVideoData] = useState<VideoData>(new VideoData())
 	const { file, url } = props
+	const fileSize = file?.size || 0
 
 	let videoElement = <></>
 
 	if (file) {
 		const type = file.type
-		const size = file.size
 
 		const fileURL = URL.createObjectURL(file)
 
-		videoElement = <video ref={videoPlayerRef} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls>
+		videoElement = <video ref={videoPlayerRef} style={{ height: '60vh' }} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls autoPlay>
 			<source src={fileURL} type={type} />
 			Your browser does not support the video tag.
 		</video>
 	} else if (url) {
-		videoElement = <video ref={videoPlayerRef} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls>
+		videoElement = <video ref={videoPlayerRef} style={{ height: '60vh' }} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls autoPlay>
 			<source src={url} />
 			Your browser does not support the video tag.
 		</video>
@@ -44,21 +44,26 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
 	useEffect(() => {
 		const { current } = videoPlayerRef;
-		if (!current?.requestVideoFrameCallback) {
+
+		if (!current) {
 			return;
 		}
 
-		let handle = 0;
-		const callback = () => {
-			onVideoFrame();
-			handle = current.requestVideoFrameCallback(callback);
-		};
+		if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+			// The API is supported! 🎉
 
-		callback();
+			let handle = 0;
+			const callback = () => {
+				onVideoFrame();
+				handle = current?.requestVideoFrameCallback(callback);
+			};
 
-		return () => {
-			current.cancelVideoFrameCallback(handle);
-		};
+			callback();
+
+			return () => {
+				current?.cancelVideoFrameCallback(handle);
+			};
+		}
 	}, [onVideoFrame]);
 
 	return (
@@ -68,7 +73,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 					{videoElement}
 				</a>
 				<div className="p-5">
-					<VideoInfo data={videoData} />
+					<VideoInfo data={videoData} fileSize={fileSize} />
 					<VideoTools videoElement={videoPlayerRef.current!} />
 				</div>
 			</div>
