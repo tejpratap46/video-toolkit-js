@@ -2,16 +2,15 @@ import VideoData from '@/data/video/VideoData'
 
 const VideoInfo = (props: VideoInfoProps) => {
 
-	const { data } = props
-	const { currentTime, fileSize } = data
+	const { data, fileSize } = props
+	const { currentTime } = data
 
 
 	const currentTimeMilli = currentTime * 1000
-	const currentTimeMilliFormated = new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 4 }).format(currentTimeMilli)
+	const currentTimeMilliFormated = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(currentTimeMilli)
 
-	const fileSizeKb = fileSize / 8;
-	const fileSizeKbFormated = new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 8 }).format(fileSizeKb)
-
+	const fileSizeKb = fileSize / (1024);
+	const fileSizeKbFormated = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(fileSizeKb)
 
 	return (
 		<>
@@ -25,4 +24,5 @@ export default VideoInfo
 
 interface VideoInfoProps {
 	readonly data: VideoData,
+	readonly fileSize: number
 }
