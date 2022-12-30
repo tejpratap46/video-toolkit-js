@@ -6,7 +6,7 @@ import VideoTools from './video-tools'
 import Section from '@/components/section'
 
 const VideoPlayer = (props: VideoPlayerProps) => {
-
+	const data = new VideoData();
 	const videoPlayerRef = useRef<HTMLVideoElement>(null)
 	const [videoData, setVideoData] = useState<VideoData>(new VideoData())
 	const { file, url } = props
@@ -17,14 +17,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 		const type = file.type
 		const size = file.size
 
+		data.fileSize = size
+
 		const fileURL = URL.createObjectURL(file)
 
-		videoElement = <video ref={videoPlayerRef} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls>
+		videoElement = <video ref={videoPlayerRef} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls autoPlay>
 			<source src={fileURL} type={type} />
 			Your browser does not support the video tag.
 		</video>
 	} else if (url) {
-		videoElement = <video ref={videoPlayerRef} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls>
+		videoElement = <video ref={videoPlayerRef} className="w-full max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700" controls autoPlay>
 			<source src={url} />
 			Your browser does not support the video tag.
 		</video>
@@ -36,7 +38,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 			return;
 		}
 
-		const data = new VideoData();
 		data.currentTime = current.currentTime
 
 		setVideoData(data)
@@ -44,21 +45,26 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
 	useEffect(() => {
 		const { current } = videoPlayerRef;
-		if (!current /*|| !current?.requestVideoFrameCallback*/) {
+
+		if (!current) {
 			return;
 		}
 
-		let handle = 0;
-		const callback = () => {
-			onVideoFrame();
-			handle = current.requestVideoFrameCallback(callback);
-		};
+		if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+			// The API is supported! 🎉
 
-		callback();
+			let handle = 0;
+			const callback = () => {
+				onVideoFrame();
+				handle = current.requestVideoFrameCallback(callback);
+			};
 
-		return () => {
-			current.cancelVideoFrameCallback(handle);
-		};
+			callback();
+
+			return () => {
+				current.cancelVideoFrameCallback(handle);
+			};
+		}
 	}, [onVideoFrame]);
 
 	return (
