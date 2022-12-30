@@ -44,7 +44,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
 	useEffect(() => {
 		const { current } = videoPlayerRef;
-		if (!current?.requestVideoFrameCallback) {
+		if (!current /*|| !current?.requestVideoFrameCallback*/) {
 			return;
 		}
 
