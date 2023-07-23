@@ -4,7 +4,7 @@ import VideoData from '@/data/video/VideoData'
 
 const VideoTools = (props: VideoToolsProps) => {
 
-	const [playbackSpeed, setPlaybackSpeed] = useState<number>(0.5)
+	const [playbackSpeed, setPlaybackSpeed] = useState<number>(1)
 
 	const { videoElement } = props;
 

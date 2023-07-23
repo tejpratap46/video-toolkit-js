@@ -1,7 +1,7 @@
 {
-	"name": "Rice Bowl",
-	"short_name": "Rice Bowl",
-	"description": "Fluffless jasmine rice for those cold winter nights",
+	"name": "Video Toolkit",
+	"short_name": "Video Toolkit",
+	"description": "Simple video player with slow-motion capability to analyze every frame of video.",
 	"icons": [
 		{
 			"src": "/images/icon-192.png",
